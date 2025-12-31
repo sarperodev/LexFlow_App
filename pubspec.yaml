@@ -1,0 +1,39 @@
+name: lexflow_app
+description: "Avukatlar için modern hukuk otomasyon sistemi."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.10.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^1.1.1
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.3.5
+  path_provider: ^2.1.5
+  csv: ^6.0.0
+  uuid: ^4.5.1
+  intl: ^0.20.2
+  file_picker: ^10.3.8
+  flutter_svg: ^2.0.10
+  pdf: ^3.11.1
+  printing: ^5.13.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0 # YÜKSELTİLDİ
+  flutter_launcher_icons: ^0.14.4 # YÜKSELTİLDİ
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.svg
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter_18pt-Regular.ttf
+        - asset: assets/fonts/Inter_18pt-Bold.ttf
+          weight: 700
