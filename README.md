@@ -1,55 +1,57 @@
-LexFlow APP ⚖️
+# LexFlow APP ⚖️
 
-LexFlow, hukuk profesyonelleri ve avukatlar için özel olarak tasarlanmış, mali yönetim ve hukuki görev takibini tek bir merkezde toplayan açık kaynaklı bir mobil uygulamadır.
+**Hukuk Profesyonelleri İçin Hibrit Finansal Yönetim Asistanı**
 
-⚠️ Önemli Duyuru
+LexFlow; avukatlar ve hukuk profesyonelleri için özel olarak tasarlanmış, mali yönetim, AAÜT hesaplaması ve hukuki görev takibini tek bir merkezde toplayan, **Android ve Web (iOS/PC)** tabanlı açık kaynaklı bir uygulamadır.
 
-Bu uygulama tamamen açık kaynak kodludur ve kullanımı ücretsizdir. Şu an için yalnızca Android sürümü mevcuttur; iOS portu üzerinde çalışmalar devam etmektedir.
+## 🚀 Öne Çıkan Özellikler (v1.01)
 
-🚀 Öne Çıkan Özellikler
+* **Net Mali Durum Takibi:** Gelir ve giderlerinizi kronolojik olarak kaydedin, büronuzun anlık net kâr/zarar durumunu tek ekrandan izleyin.
+* **AAÜT 2026 Entegrasyonu:** 2025-2026 yılı TBB Avukatlık Asgari Ücret Tarifesi entegre edilmiştir. Maktu ücret kalemlerinden (Danışma, Dilekçe vb.) düşük giriş yapıldığında sistem sizi uyarır.
+* **Çapraz Platform (PWA):** Android cihazların yanı sıra iPhone, iPad ve bilgisayar tarayıcılarında kurulumsuz çalışabilir.
+* **Karanlık Mod (Dark Mode):** Gece çalışmaları için göz yormayan, cihaz temasıyla uyumlu arayüz.
+* **Gelişmiş Grafikler:** Gelir/Gider dağılımını (Pasta Grafik) ve kasanızın zaman içindeki değişimini (Çizgi Grafik) görselleştirin.
+* **Güvenli Veri Yedekleme (CSV):** Tüm finansal kayıtlarınızı Excel/CSV formatında dışarı aktarın, yedekleyin veya başka bir cihaza transfer edin.
+* **Gizlilik Odaklı:** Verileriniz bulutta değil, tamamen cihazınızın yerel hafızasında saklanır.
 
-Net Mali Durum Takibi: Gelir ve giderlerinizi kronolojik olarak kaydedin, büronuzun anlık net kâr/zarar durumunu tek ekrandan izleyin.
+---
 
-AAÜT 2025 Entegrasyonu: 2025 yılı Avukatlık Asgari Ücret Tarifesi uygulamaya entegre edilmiştir. Maktu ücret kalemlerinden (Danışma, Dilekçe, Mahkeme vb.) düşük bir ücret girişi yaptığınızda sistem sizi anlık olarak uyarır.
+## 📲 Kurulum ve Kullanım Talimatları
 
-Gelişmiş Grafik Analizi: Dairesel Grafik: Gelir ve giderlerinizin kategorik dağılımını görselleştirin.
+LexFlow iki farklı şekilde kullanılabilir:
 
-Zaman Çizelgesi (Line Chart): İlk kayıt tarihinizden itibaren kasanızın kümülatif net durum değişimini çizgi grafik üzerinde takip edin.
+### 1. Web Sürümü (iOS - iPhone/iPad ve Bilgisayar)
+Uygulamayı App Store'a ihtiyaç duymadan, **PWA (Progressive Web App)** teknolojisi ile iPhone veya iPad'inize kurabilirsiniz.
 
-Hukuki Görev Yönetimi: Bildirimden bağımsız, tarih ve saat bazlı profesyonel bir ajanda ile görevlerinizi yönetin ve tamamlananları işaretleyin.
+1.  Safari tarayıcısında şu adrese gidin:  
+    👉 **[https://sarperodev.github.io/LexFlow_App/](https://sarperodev.github.io/LexFlow_App/)**
+2.  Alt menüdeki **"Paylaş"** (kare ve yukarı ok) ikonuna dokunun.
+3.  Menüyü kaydırıp **"Ana Ekrana Ekle"** seçeneğini seçin ve ekleyin.
+4.  *⚠️ **Önemli:** Veri kaybı yaşamamak için uygulamayı "Gizli Sekme" (Private Mode) içerisinde kullanmayınız.*
 
-Profesyonel PDF Çıktısı: Kaydedilen masraflar için yargı birimi bilgilerini (Şehir, Merci, Esas No) içeren, imzalı ve kurumsal formatta PDF makbuzlar oluşturun ve paylaşın.
+### 2. Android Sürümü (APK)
+Android kullanıcıları, uygulamayı paketlenmiş uygulama dosyası olarak indirebilir.
 
-Veri Yedekleme (CSV): Tüm finansal kayıtlarınızı CSV formatında dışarı aktarın veya mevcut yedeklerinizi uygulamaya geri yükleyin.
+1.  Bu sayfadaki **"Releases"** bölümünden en güncel **`LexFlow_v1.01.apk`** dosyasını indirin.
+2.  Dosyayı açın (Telefonunuz "Bilinmeyen kaynaklara izin ver" uyarısı verirse onaylayın).
+3.  Kurulum tamamlandığında uygulama internetsiz olarak çalışmaya hazırdır.
 
-📲 Kurulum ve Kullanım
+---
 
-Uygulamanın Android sürümünü şu an için APK olarak kurabilirsiniz:
+## 🛠 Teknik Detaylar
 
-GitHub üzerindeki "Releases" bölümünden en güncel .apk dosyasını indirin.
+* **Dil:** Dart (Flutter Framework)
+* **Sürüm:** 1.01
+* **Geliştirici:** Av. Sarper Ödev
+* **Veri Saklama:** Local Storage & File System (Device Only)
 
-Dosyayı açtığınızda telefonunuz "Bilinmeyen kaynaklardan uygulama yükleme" izni isteyebilir. Dosya yöneticinize veya tarayıcınıza bu izni vererek kuruluma devam edin.
-
-Uygulamayı açtıktan sonra Ayarlar / Profil sekmesinden büro adınızı ve isminizi kaydederek PDF makbuzlarınızı kişiselleştirebilirsiniz.
-
-🛠 Teknik Detaylar
-
-Dil: Dart (Flutter Framework)
-
-Sürüm: 1.01
-
-Geliştirici: Sarper Ödev
-
-Veri Saklama: Yerel CSV Veritabanı (Gizlilik odaklı, verileriniz cihazınızda kalır)
-
-🤝 Katkıda Bulunma
+## 🤝 Katkıda Bulunma
 
 Bu proje topluluk katkılarına açıktır. Gördüğünüz hataları bildirmek (issue açmak) veya yeni özellikler eklemek (pull request göndermek) isterseniz lütfen çekinmeyin.
 
-Lisans
+## Lisans
 
-Bu proje MIT lisansı ile korunmaktadır. Özgürce kullanılabilir ve geliştirilebilir.
+Bu proje MIT lisansına ek olarak ticari satış yasağı ile korunmaktadır. Kullanıcılar tarafından özgürce kullanılabilir ve geliştirilebilir, ancak ücretli olarak satılamaz, paralı bir servisin parçası yapılamaz. Detaylı bilgi için projenin ana dizinindeki `LICENSE` dosyasına bakınız. 
 
-Geliştirici Künyesi
-
-Uygulama LexFlow APP Geliştirici Sarper Ödev Sürüm 1.00
+---
+**Geliştirici Künyesi** LexFlow APP | Geliştirici: Av. Sarper Ödev
