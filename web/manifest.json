@@ -1,11 +1,11 @@
 {
-    "name": "lexflow_app",
-    "short_name": "lexflow_app",
+    "name": "LexFlow APP Hukuk ve Mali Yönetim",
+    "short_name": "LexFlow APP",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#ffffff",
+    "theme_color": "#13538A",
+    "description": "Avukatlar için mali yönetim ve görev takibi uygulaması.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart'; // Platform kontrolü (kIsWeb) için eklendi
+import 'package:universal_html/html.dart' as html; // Web üzerinden dosya indirme işlemi için eklendi
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -418,9 +420,18 @@ class _AllTransactionsPageState extends State<AllTransactionsPage> {
         if (!_isSelectionMode) PopupMenuButton<String>(icon: const Icon(Icons.import_export), onSelected: (v) async {
           if (v == 'export') { await Navigator.push(context, MaterialPageRoute(builder: (context) => const ExportSelectionPage())); _load(); }
           else {
-            FilePickerResult? res = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['csv']);
+            // WEB UYUMLU İÇERİ AKTARMA
+            FilePickerResult? res = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['csv'], withData: true);
             if (res != null) {
-              final file = File(res.files.single.path!); final content = await file.readAsString();
+              String content;
+              if (kIsWeb) {
+                // Web: Byte'dan oku
+                content = utf8.decode(res.files.single.bytes!);
+              } else {
+                // Mobil: Dosya yolundan oku
+                final file = File(res.files.single.path!);
+                content = await file.readAsString();
+              }
               final rows = const CsvToListConverter().convert(content); List<Expense> imported = [];
               for (int i = 1; i < rows.length; i++) { if (rows[i].length >= 11) imported.add(Expense.fromCsvRow(rows[i])); }
               await CsvService().mergeExpenses(imported); if (mounted) _load();
@@ -468,11 +479,29 @@ class _ExportSelectionPageState extends State<ExportSelectionPage> {
     const Divider(),
     Expanded(child: ListView.builder(itemCount: filtered.length, itemBuilder: (context, index) { final item = filtered[index]; return CheckboxListTile(title: Text(item.clientName), subtitle: Text("${item.date} - ${item.type}"), value: selectedIds.contains(item.id), onChanged: (v) { setState(() { if (v!) { selectedIds.add(item.id); } else { selectedIds.remove(item.id); } }); }); })),
     Padding(padding: const EdgeInsets.all(16), child: SizedBox(width: double.infinity, height: 55, child: ElevatedButton(onPressed: selectedIds.isEmpty ? null : () async { 
-      String? path = await FilePicker.platform.getDirectoryPath(); if (path == null || !mounted) return; 
-      final records = all.where((e) => selectedIds.contains(e.id)).toList(); List<List<dynamic>> csvData = [['ID', 'Tarih', 'IsIncome', 'Client', 'City', 'Yargi Turu', 'Tam Merci', 'Dosya No', 'Tur', 'Tutar', 'Aciklama']]; 
+      
+      final records = all.where((e) => selectedIds.contains(e.id)).toList(); 
+      List<List<dynamic>> csvData = [['ID', 'Tarih', 'IsIncome', 'Client', 'City', 'Yargi Turu', 'Tam Merci', 'Dosya No', 'Tur', 'Tutar', 'Aciklama']]; 
       for (var r in records) { csvData.add(r.toCsvRow()); } 
-      final file = File('$path/LexFlow_Yedek_${DateTime.now().millisecondsSinceEpoch}.csv'); await file.writeAsString(const ListToCsvConverter().convert(csvData)); 
-      if (context.mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("DOSYA KAYDEDİLDİ: ${file.path}"))); Navigator.pop(context); }    }, child: const Text("Dışarı Aktar"))))
+      String csvString = const ListToCsvConverter().convert(csvData);
+
+      if (kIsWeb) {
+        // WEB İÇİN İNDİRME MANTIĞI
+        final bytes = utf8.encode(csvString);
+        final blob = html.Blob([bytes]);
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        html.AnchorElement(href: url)
+          ..setAttribute("download", "LexFlow_Yedek_${DateTime.now().millisecondsSinceEpoch}.csv")
+          ..click();
+        html.Url.revokeObjectUrl(url);
+        if (context.mounted) Navigator.pop(context);
+      } else {
+        // MOBİL İÇİN KAYDETME MANTIĞI
+        String? path = await FilePicker.platform.getDirectoryPath(); if (path == null || !mounted) return; 
+        final file = File('$path/LexFlow_Yedek_${DateTime.now().millisecondsSinceEpoch}.csv'); await file.writeAsString(csvString); 
+        if (context.mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("DOSYA KAYDEDİLDİ: ${file.path}"))); Navigator.pop(context); }    
+      }
+    }, child: const Text("Dışarı Aktar"))))
   ]));
 }
 
@@ -491,7 +520,7 @@ int _selectedHours = 1;
 
   final List<String> cities = [
     "ADANA", "ANKARA", "BURSA", "İSTANBUL", "İZMİR", 
-    "ADDIYAMAN", "AFYONKARAHİSAR", "AĞRI", "AKSARAY", "AMASYA", "ANTALYA", "ARDAHAN", "ARTVİN", "AYDIN", "BALIKESİR", "BARTIN", "BATMAN", "BAYBURT", "BİLECİK", "BİNGÖL", "BİTLİS", "BOLU", "BURDUR", "ÇANAKKALE", "ÇANKIRI", "ÇORUM", "DENİZLİ", "DİYARBAKIR", "DÜZCE", "EDİRNE", "ELAZIĞ", "ERZİNCAN", "ERZURUM", "ESKİŞEHİR", "GAZİANTEP", "GİRESUN", "GÜMÜŞHANE", "HAKKARİ", "HATAY", "IĞDIR", "ISPARTA", "KAHRAMANMARAŞ", "KARABÜK", "KARAMAN", "KARS", "KASTAMONU", "KAYSERİ", "KİLİS", "KIRIKKALE", "KIRKLARELİ", "KIRŞEHİR", "KOCAELİ", "KONYA", "KÜTAHYA", "MALATYA", "MANİSA", "MARDİN", "MERSİN", "MUĞLA", "MUŞ", "NEVŞEHİR", "NİĞDE", "ORDU", "OSMANİYE", "RİZE", "SAKARYA", "SAMSUN", "ŞANLIURFA", "SİİRT", "SİNOP", "ŞIRNAK", "SİVAS", "TEKİRDAĞ", "TOKAT", "TRABZON", "TUNCELİ", "UŞAK", "VAN", "YALOVA", "YOZGAT", "ZONGULDAK"
+    "ADIYAMAN", "AFYONKARAHİSAR", "AĞRI", "AKSARAY", "AMASYA", "ANTALYA", "ARDAHAN", "ARTVİN", "AYDIN", "BALIKESİR", "BARTIN", "BATMAN", "BAYBURT", "BİLECİK", "BİNGÖL", "BİTLİS", "BOLU", "BURDUR", "ÇANAKKALE", "ÇANKIRI", "ÇORUM", "DENİZLİ", "DİYARBAKIR", "DÜZCE", "EDİRNE", "ELAZIĞ", "ERZİNCAN", "ERZURUM", "ESKİŞEHİR", "GAZİANTEP", "GİRESUN", "GÜMÜŞHANE", "HAKKARİ", "HATAY", "IĞDIR", "ISPARTA", "KAHRAMANMARAŞ", "KARABÜK", "KARAMAN", "KARS", "KASTAMONU", "KAYSERİ", "KİLİS", "KIRIKKALE", "KIRKLARELİ", "KIRŞEHİR", "KOCAELİ", "KONYA", "KÜTAHYA", "MALATYA", "MANİSA", "MARDİN", "MERSİN", "MUĞLA", "MUŞ", "NEVŞEHİR", "NİĞDE", "ORDU", "OSMANİYE", "RİZE", "SAKARYA", "SAMSUN", "ŞANLIURFA", "SİİRT", "SİNOP", "ŞIRNAK", "SİVAS", "TEKİRDAĞ", "TOKAT", "TRABZON", "TUNCELİ", "UŞAK", "VAN", "YALOVA", "YOZGAT", "ZONGULDAK"
   ];
 
   final Map<String, List<String>> uyap = {
@@ -682,6 +711,25 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       child: const Text("DEĞİŞİKLİKLERİ KAYDET"))),
               
+              // --- KULLANIM KILAVUZU BUTONU (YENİ EKLENDİ) ---
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UsageGuidePage()));
+                  },
+                  icon: const Icon(Icons.menu_book_rounded),
+                  label: const Text("KULLANIM KILAVUZU & WEB UYARILARI"),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF13538A),
+                    side: const BorderSide(color: Color(0xFF13538A)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  ),
+                )
+              ),
+
               // --- GELİŞTİRİCİ KÜNYESİ (DEVELOPER CREDITS) ---
               const SizedBox(height: 40),
               Container(
@@ -707,7 +755,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      "Sürüm: 1.00",
+                      "Sürüm: 1.01",
                       style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
@@ -717,4 +765,60 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       );
+}
+
+// --- KULLANIM KILAVUZU SAYFASI (GÜNCELLENDİ: KARANLIK MOD UYUMLU) ---
+class UsageGuidePage extends StatelessWidget {
+  const UsageGuidePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Mevcut temanın yazı rengini alıyoruz (Karanlıkta beyaz, aydınlıkta siyah olur)
+    final textColor = Theme.of(context).colorScheme.onSurface;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Kullanım Kılavuzu")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _header("LexFlow Platform Rehberi"),
+            _paragraph("LexFlow, hem Android cihazlarda (APK) hem de tarayıcılarda (Web/PWA) çalışan hibrit bir yazılımdır.", textColor),
+            const Divider(height: 30),
+            
+            _header("1. Android vs. Web Farkları"),
+            _bullet("Veri Kaydı (Android):", "Veriler telefon hafızasında fiziksel dosya olarak tutulur. Uygulama silinmedikçe kaybolmaz.", textColor),
+            _bullet("Veri Kaydı (Web/iOS):", "Veriler tarayıcının 'Local Storage' alanında tutulur. Tarayıcı geçmişi silinirse veriler gidebilir.", textColor),
+            _bullet("Yedekleme:", "Android'de klasöre, Web'de 'İndirilenler' klasörüne kaydedilir.", textColor),
+            
+            const Divider(height: 30),
+            _header("2. Web (iPhone/iPad) İçin Altın Kurallar"),
+            _subHeader("A. Kurulum (PWA)", textColor),
+            _paragraph("Safari'de 'Paylaş > Ana Ekrana Ekle' diyerek uygulamayı yükleyin. Bu, verileri daha güvenli bir alanda tutar.", textColor),
+            _subHeader("B. Güvenlik Uyarısı ⚠️", textColor),
+            _paragraph("ASLA 'Gizli Sekme' (Private Tab) kullanmayın. Sekme kapandığı an tüm veriler silinir.", textColor),
+            _subHeader("C. Haftalık Sigorta", textColor),
+            _paragraph("Her hafta 'Tüm İşlemler > Dışa Aktar' butonu ile verilerinizi yedekleyip iCloud/Drive'a atın.", textColor),
+
+            const Divider(height: 30),
+            _header("3. Cihazlar Arası Transfer"),
+            _paragraph("Veriler bulutta değil, cihazınızda saklanır. Bilgisayardan telefona geçmek için 'Dışa Aktar' ve 'İçe Aktar' menülerini kullanabilirsiniz.", textColor),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Başlıklar marka rengi olduğu için (Mavi) karanlık modda da okunur, sabit bıraktık.
+  Widget _header(String text) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF13538A))));
+  
+  // Alt başlıklar artık dinamik renk alıyor
+  Widget _subHeader(String text, Color color) => Padding(padding: const EdgeInsets.only(top: 8, bottom: 4), child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: color)));
+  
+  // Paragraflar artık dinamik renk alıyor
+  Widget _paragraph(String text, Color color) => Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(text, style: TextStyle(fontSize: 14, height: 1.5, color: color)));
+  
+  // Madde işaretleri (Bullet points) RichText olduğu için özel renk ataması yapıldı
+  Widget _bullet(String title, String text, Color color) => Padding(padding: const EdgeInsets.only(bottom: 6), child: RichText(text: TextSpan(style: TextStyle(color: color, fontSize: 14, height: 1.4), children: [TextSpan(text: "• $title ", style: const TextStyle(fontWeight: FontWeight.bold)), TextSpan(text: text)])));
 }
