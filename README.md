@@ -4,10 +4,11 @@
 
 LexFlow; avukatlar ve hukuk profesyonelleri için özel olarak tasarlanmış, mali yönetim, AAÜT hesaplaması ve hukuki görev takibini tek bir merkezde toplayan, **Android ve Web (iOS/PC)** tabanlı açık kaynaklı bir uygulamadır.
 
-## 🚀 Öne Çıkan Özellikler (v1.01)
+## 🚀 Öne Çıkan Özellikler (v1.02)
 
-* **Net Mali Durum Takibi:** Gelir ve giderlerinizi kronolojik olarak kaydedin, büronuzun anlık net kâr/zarar durumunu tek ekrandan izleyin.
-* **AAÜT 2026 Entegrasyonu:** 2025-2026 yılı TBB Avukatlık Asgari Ücret Tarifesi entegre edilmiştir. Maktu ücret kalemlerinden (Danışma, Dilekçe vb.) düşük giriş yapıldığında sistem sizi uyarır.
+* **Mali Durum Takibi:** Gelir ve giderlerinizi kronolojik olarak kaydedin, büronuzun anlık net kâr/zarar durumunu tek ekrandan izleyin.
+* **AAÜT 2026 Tam Uyumluluk:** Resmi Gazete'de yayımlanan **2026 Yılı Avukatlık Asgari Ücret Tarifesi** sisteme tamamen entegre edilmiştir. Hesaplamalar güncel tarife üzerinden yapılır.
+* **Modern ve Akıcı Tasarım (YENİ):** iOS standartlarında (Cupertino) tarih seçiciler, **Glassmorphism (Buzlu Cam)** efektli başlıklar ve modernize edilmiş arayüz ile daha profesyonel bir deneyim.
 * **Çapraz Platform (PWA):** Android cihazların yanı sıra iPhone, iPad ve bilgisayar tarayıcılarında kurulumsuz çalışabilir.
 * **Karanlık Mod (Dark Mode):** Gece çalışmaları için göz yormayan, cihaz temasıyla uyumlu arayüz.
 * **Gelişmiş Grafikler:** Gelir/Gider dağılımını (Pasta Grafik) ve kasanızın zaman içindeki değişimini (Çizgi Grafik) görselleştirin.
