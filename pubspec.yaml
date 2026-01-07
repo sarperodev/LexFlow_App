@@ -1,7 +1,7 @@
 name: lexflow_app
 description: Avukatlar için masraf takibi ve AAÜT asistanı.
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.2+2
 
 environment:
   sdk: '>=3.10.4 <4.0.0'
@@ -25,8 +25,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0 # YÜKSELTİLDİ
-  flutter_launcher_icons: ^0.14.4 # YÜKSELTİLDİ
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.0
 
 flutter:
   uses-material-design: true
@@ -38,3 +39,10 @@ flutter:
         - asset: assets/fonts/Inter_18pt-Regular.ttf
         - asset: assets/fonts/Inter_18pt-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "assets/icon_background.png"
+  adaptive_icon_foreground: "assets/icon_foreground.png"
