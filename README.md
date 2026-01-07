@@ -33,7 +33,7 @@ Uygulamayı App Store'a ihtiyaç duymadan, **PWA (Progressive Web App)** teknolo
 ### 2. Android Sürümü (APK)
 Android kullanıcıları, uygulamayı paketlenmiş uygulama dosyası olarak indirebilir.
 
-1.  Bu sayfadaki **"Releases"** bölümünden en güncel **`LexFlow_v1.01.apk`** dosyasını indirin.
+1.  Bu sayfadaki **"Releases"** bölümünden en güncel **`LexFlow_v1.02.apk`** dosyasını indirin.
 2.  Dosyayı açın (Telefonunuz "Bilinmeyen kaynaklara izin ver" uyarısı verirse onaylayın).
 3.  Kurulum tamamlandığında uygulama internetsiz olarak çalışmaya hazırdır.
 
@@ -42,9 +42,9 @@ Android kullanıcıları, uygulamayı paketlenmiş uygulama dosyası olarak indi
 ## 🛠 Teknik Detaylar
 
 * **Dil:** Dart (Flutter Framework)
-* **Sürüm:** 1.01
+* **Sürüm:** 1.02
 * **Geliştirici:** Av. Sarper Ödev
-* **Veri Saklama:** Local Storage & File System (Device Only)
+* **Veri Saklama:** Local Storage & File System (Sadece Android Versiyonu İçin)
 
 ## 🤝 Katkıda Bulunma
 
